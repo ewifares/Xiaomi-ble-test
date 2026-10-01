@@ -2,18 +2,18 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Xiaomi BLE GATT Test</title>
+  <title>Xiaomi BLE Properties Test</title>
 </head>
 
 <body>
 
-<h1>Xiaomi BLE GATT Test</h1>
+<h1>Xiaomi BLE Properties Test</h1>
 
 <button id="connect">Connect to Scooter</button>
 
 <p id="status">Not connected</p>
 
-<h2>Services & Characteristics</h2>
+<h2>Characteristics</h2>
 <pre id="output">Nothing yet</pre>
 
 <script>
@@ -30,9 +30,6 @@ button.onclick = async () => {
       acceptAllDevices: true
     });
 
-    status.textContent =
-      "Found: " + (device.name || "Unknown");
-
     const server = await device.gatt.connect();
 
     status.textContent =
@@ -41,23 +38,32 @@ button.onclick = async () => {
     const services = await server.getPrimaryServices();
 
     for (const service of services) {
+
       output.textContent +=
-        "SERVICE: " + service.uuid + "\n";
+        "SERVICE: " + service.uuid + "\n\n";
 
       const characteristics =
         await service.getCharacteristics();
 
       for (const characteristic of characteristics) {
-        output.textContent +=
-          "  CHARACTERISTIC: " +
-          characteristic.uuid + "\n";
-      }
 
-      output.textContent += "\n";
+        output.textContent +=
+          "CHARACTERISTIC: " +
+          characteristic.uuid + "\n";
+
+        output.textContent +=
+          "Properties: " +
+          Object.entries(characteristic.properties)
+            .filter(([key, value]) => value)
+            .map(([key]) => key)
+            .join(", ") +
+          "\n\n";
+      }
     }
 
   } catch (error) {
     status.textContent = "Error: " + error.message;
+    output.textContent = "";
   }
 };
 </script>
