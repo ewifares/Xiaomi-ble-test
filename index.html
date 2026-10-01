@@ -2,12 +2,12 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Xiaomi BLE Properties Test</title>
+  <title>Xiaomi BLE UUID Test</title>
 </head>
 
 <body>
 
-<h1>Xiaomi BLE Properties Test</h1>
+<h1>Xiaomi BLE UUID Test</h1>
 
 <button id="connect">Connect to Scooter</button>
 
@@ -40,30 +40,22 @@ button.onclick = async () => {
     for (const service of services) {
 
       output.textContent +=
-        "SERVICE: " + service.uuid + "\n\n";
+        "SERVICE: " + service.uuid + "\n";
 
       const characteristics =
         await service.getCharacteristics();
 
       for (const characteristic of characteristics) {
-
         output.textContent +=
-          "CHARACTERISTIC: " +
+          "  CHARACTERISTIC: " +
           characteristic.uuid + "\n";
-
-        output.textContent +=
-          "Properties: " +
-          Object.entries(characteristic.properties)
-            .filter(([key, value]) => value)
-            .map(([key]) => key)
-            .join(", ") +
-          "\n\n";
       }
+
+      output.textContent += "\n";
     }
 
   } catch (error) {
     status.textContent = "Error: " + error.message;
-    output.textContent = "";
   }
 };
 </script>
